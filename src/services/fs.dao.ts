@@ -1,5 +1,4 @@
 import fs from "fs"
-import { Product } from "../entities/products"
 import { v4 } from "uuid";
 export class ProductManager
     <T extends {
@@ -22,7 +21,6 @@ export class ProductManager
                 if (this.Products !== undefined) {
                     this.count()
                     this.Products.push({ ...product, id: v4() } as T)
-                    console.log(this.Products)
                     await fs.promises.writeFile(path, JSON.stringify(this.Products), "utf-8")
                     return product as T
                 }
@@ -73,21 +71,21 @@ export class ProductManager
         }
 
     ) {
-        if (ProductManager.Instance !== undefined) return ProductManager.Instance
-        else {
-            if (fs.existsSync(path)) {
-                this.Products = JSON.parse(fs.readFileSync(path, "utf-8"))
+        // if (ProductManager.Instance !== undefined) return ProductManager.Instance
+        // else {
+        //     if (fs.existsSync(path)) {
+        //         this.Products = JSON.parse(fs.readFileSync(path, "utf-8"))
 
-            }
-            else {
-                this.Products = []
-                fs.writeFileSync(this.path, JSON.stringify(this.Products))
-            }
-            ProductManager.Instance = this
-            return this
-        }
-
+        //     }
+        //     else {
+        //         this.Products = []
+        //         fs.writeFileSync(this.path, JSON.stringify(this.Products))
+        //     }
+        //     ProductManager.Instance = this
+        //     return this
     }
+
 }
+
 
 
