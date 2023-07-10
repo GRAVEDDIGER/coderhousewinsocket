@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { ProductService } from "./products/product.service";
 import { Server } from "socket.io";
-import { httpServer as server } from "./app";
+import { io } from "./app";
+// import { httpServer as server } from "./app";
 import { ICart, Product } from "./entities/products";
 export class AppController {
     constructor(
@@ -18,12 +19,15 @@ export class AppController {
             } catch (error) { console.log(error) }
 
         },
+        public addProduct = async (req: Request, res: Response) => {
+            res.render("addProduct")
+        },
         public realTimeProducts = async (req: Request, res: Response) => {
-            const ioServer = new Server(server)
-            ioServer.on("connection", async () => {
+
+            io.on("connection", async () => {
                 console.log("Real Time Sockets Connected")
                 const response = await this.productsService.getData()
-                ioServer.emit("data", response)
+                io.emit("data", response)
             })
             res.render("realtime")
 

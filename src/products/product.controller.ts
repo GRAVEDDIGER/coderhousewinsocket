@@ -3,23 +3,9 @@ import { ProductService } from "./product.service";
 import { Product } from "../entities/products";
 import { ResponseObject } from '../entities/classes';
 import { Server, Socket } from "socket.io";
-import { httpServer } from "../app";
+import { io } from "../app";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
-const io = new Server(httpServer)
-const socketFunction = (io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>): {
-    io: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> | {},
-    socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> | {},
-    connectionState: boolean
-} => {
-    let connectionState: boolean = false
-    let sockete = {}
 
-    const ioObject = io.on("connection", (socket) => {
-        connectionState = true
-        sockete = socket
-    })
-    return { io: sockete, socket: ioObject, connectionState }
-}
 
 export class ProductController {
     constructor(
@@ -41,15 +27,15 @@ export class ProductController {
             }
         },
         public addProduct = async (req: Request, res: Response) => {
-            const { code, description, id, price, stock, thumbnail, title }: Product = req.body
-            const response = await this.service.addProduct({ code, description, price, stock, thumbnail, title })
+            const { code, description, id, price, stock, thumbnail, title }: Product = req.body;
+            const response = await this.service.addProduct({ code, description, price, stock, thumbnail, title });
             if (response !== undefined) {
-                console.log("emited", response, req.get("referer"))
-                io.emit("post", response)
-                res.redirect(req.get("referer") || "/")
-            }
-            else res.status(404).send("Unable to add product")
+                console.log("emited", response, req.get("referer"));
+                io.emit("newProduct", response); // <- Emitir el evento "newProduct" aquí
+                res.redirect(req.get("referer") || "/");
+            } else res.status(404).send("Unable to add product");
         },
+
         public getById = async (req: Request, res: Response) => {
             const { id } = req.params
             try {
@@ -82,7 +68,9 @@ export class ProductController {
             try {
                 const response = await this.service.deleteProduct(id)
                 if (response?.ok) {
+                    io.emit("eraseProduct", id)
                     res.status(200).send(response)
+
                 } else res.status(404).send(response)
 
             } catch (error) { console.log(error) }

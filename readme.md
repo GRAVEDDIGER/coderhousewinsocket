@@ -29,7 +29,10 @@ The products.json holds the data
 * PUT /api/product Update the product for the specified id provided through body:{ code, description, price, stock, thumbnail, title,id}
 * DELETE /api/product/:id Deletes the product for the specified id
 
-
+## Browser Routes
+* GET /addProducts Basic Web Form that adds a new Product to the database
+* GET /realTimeProducts Shows realtime Database product to all connected users. 
+  
 ## FS DAO Service
 
 To instanciate the class you must provide 2 arguments:
