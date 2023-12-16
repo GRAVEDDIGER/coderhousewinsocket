@@ -2,6 +2,7 @@ const socket = io()
 //    socket.on("post",(data) => {console.log(data)})
 socket.on("post",(data) => {console.log(data)})
 socket.on('newProduct', function(product) {
+   console.log(product)
     const item=product.data    
     const cardTemplate=document.getElementById("productCardTemplate").content.cloneNode(true)   
     const cardArticle=cardTemplate.querySelector(".productCard")

@@ -1,6 +1,10 @@
-# Desafio 3 CoderHouse
+# Desafio  CoderHouse Web Sockets y Handlebars
 
 ## Basic Web Server FS persistence
+
+## Basic Realtime Web Socket Implementation 
+
+## Views using handlebars
 
 ## Install
 ```bash
